@@ -1,11 +1,13 @@
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:my_news/utils.dart';
 import 'package:webfeed/webfeed.dart';
 
 import '../models/article_model.dart';
 
 class FeedService {
-  final feedUrl = 'https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss';
+  // final feedUrl = 'https://actualidad.rt.com/feeds/all.rss';
+  final feedUrl = 'https://jacobin.com.br/feed';
 
   Future<List<Article>> fetchFeed() async {
     final client = http.Client();
@@ -14,12 +16,20 @@ class FeedService {
       var rssFeed = RssFeed.parse(res.body);
       List<Article> articles = [];
       for (int index = 0; index < rssFeed.items!.length; index++) {
-        // inspect(rssFeed.items![index]);
-        articles.add(new Article(
-          rssFeed.items![index].title as String,
-          rssFeed.items![index].description as String,
-          rssFeed.items![index].enclosure!.url as String
-        ));
+        inspect(rssFeed.items?[index]);
+        var title = Utils.sanatizeValue(rssFeed.items![index].title.toString());
+        if (title == '') {
+          continue;
+        }
+        var description =
+            Utils.sanatizeValue(rssFeed.items![index].description.toString());
+        var imgUrl = Utils.sanatizeValue(
+            rssFeed.items![index].enclosure?.url.toString());
+        var pubDate = Utils.sanatizeValue(
+            rssFeed.items![index].pubDate.toString());
+        var link = Utils.sanatizeValue(
+            rssFeed.items![index].description.toString());
+        articles.add(new Article(title, description, link, pubDate, imgUrl));
       }
       return articles;
     } else {

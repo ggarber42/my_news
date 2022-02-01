@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'My (anti)news',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
@@ -30,14 +31,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   FeedService feed = FeedService();
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemCount: articles!.length,
                 itemBuilder: (context, index) => ListTile(
                   title: Text(articles[index].title),
-                  leading: Image.network(articles[index].imgUrl)
+                  leading: articles[index].imgUrl != ''
+                      ? Image.network(articles[index].imgUrl)
+                      : Image.network('http://via.placeholder.com/50x50'),
                 ),
               );
             }
