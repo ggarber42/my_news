@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_news/services/feed_service.dart';
+import 'package:my_news/widgets/news_tile.dart';
 
 import 'models/article_model.dart';
 
@@ -50,12 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
               return ListView.builder(
                 //Now let's create our custom List tile
                 itemCount: articles!.length,
-                itemBuilder: (context, index) => ListTile(
-                  title: Text(articles[index].title),
-                  leading: articles[index].imgUrl != ''
-                      ? Image.network(articles[index].imgUrl)
-                      : Image.network('http://via.placeholder.com/50x50'),
-                ),
+                itemBuilder: (context, index) => NewsTile(articles[index]),
               );
             }
             return Center(

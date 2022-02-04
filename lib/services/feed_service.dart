@@ -1,8 +1,9 @@
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:my_news/utils.dart';
 import 'package:webfeed/webfeed.dart';
+import 'package:intl/intl.dart';
 
+import 'package:my_news/utils.dart';
 import '../models/article_model.dart';
 
 class FeedService {
@@ -16,7 +17,7 @@ class FeedService {
       var rssFeed = RssFeed.parse(res.body);
       List<Article> articles = [];
       for (int index = 0; index < rssFeed.items!.length; index++) {
-        inspect(rssFeed.items?[index]);
+        // inspect(rssFeed.items?[index]);
         var title = Utils.sanatizeValue(rssFeed.items![index].title.toString());
         if (title == '') {
           continue;
@@ -25,10 +26,11 @@ class FeedService {
             Utils.sanatizeValue(rssFeed.items![index].description.toString());
         var imgUrl = Utils.sanatizeValue(
             rssFeed.items![index].enclosure?.url.toString());
-        var pubDate = Utils.sanatizeValue(
-            rssFeed.items![index].pubDate.toString());
-        var link = Utils.sanatizeValue(
-            rssFeed.items![index].description.toString());
+        var formatedDate =
+            DateFormat.yMd().format(rssFeed.items![index].pubDate as DateTime);
+        var pubDate = formatedDate.toString();
+        var link =
+            Utils.sanatizeValue(rssFeed.items![index].description.toString());
         articles.add(new Article(title, description, link, pubDate, imgUrl));
       }
       return articles;
