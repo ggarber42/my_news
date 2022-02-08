@@ -13,11 +13,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'My (anti)news',
+      title: 'My news',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: MyHomePage(title: 'My (anti)news'),
+      home: MyHomePage(title: 'My news'),
     );
   }
 }
@@ -36,20 +36,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    feed.fetchFeed();
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(
+            widget.title,
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
         ),
         body: FutureBuilder(
           future: feed.fetchFeed(),
           builder:
               (BuildContext context, AsyncSnapshot<List<Article>> snapshot) {
             if (snapshot.hasData) {
-              //Now let's make a list of articles
               List<Article>? articles = snapshot.data;
               return ListView.builder(
-                //Now let's create our custom List tile
                 itemCount: articles!.length,
                 itemBuilder: (context, index) => NewsTile(articles[index]),
               );
