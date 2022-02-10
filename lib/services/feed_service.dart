@@ -7,17 +7,29 @@ import 'package:my_news/utils.dart';
 import '../models/article_model.dart';
 
 class FeedService {
-  // final feedUrl = 'https://actualidad.rt.com/feeds/all.rss';
-  final feedUrl = 'https://jacobin.com.br/feed';
+  final feedsUrl = [
+    'https://nexojornal.com.br/rss.xml',
+    'http://rss.dw.com/rdf/rss-br-all',
+    'https://www.cartoonbrew.com/feed'
+  ];
 
-  Future<List<Article>> fetchFeed() async {
+  Future<List<Article>> fetchFeeds() async {
+    List<Article> articles = [];
+    for (int index = 0; index < feedsUrl.length; index++) {
+      var fetchedArticles = await fetchFeed(feedsUrl[index]);
+      articles = [...articles, ...fetchedArticles];
+    }
+    return articles;
+  }
+
+  Future<List<Article>> fetchFeed(feedUrl) async {
     final client = http.Client();
     final res = await client.get(Uri.parse(feedUrl));
     if (res.statusCode == 200) {
       var rssFeed = RssFeed.parse(res.body);
       List<Article> articles = [];
       for (int index = 0; index < rssFeed.items!.length; index++) {
-        // inspect(rssFeed.items?[index]);
+        inspect(rssFeed.items![index]);
         var title = Utils.sanatizeValue(rssFeed.items![index].title.toString());
         if (title == '') {
           continue;
@@ -26,9 +38,14 @@ class FeedService {
             Utils.sanatizeValue(rssFeed.items![index].description.toString());
         var imgUrl = Utils.sanatizeValue(
             rssFeed.items![index].enclosure?.url.toString());
-        var formatedDate =
-            DateFormat.yMd().format(rssFeed.items![index].pubDate as DateTime);
-        var pubDate = formatedDate.toString();
+        String formatedDate;
+        String pubDate;
+        if (rssFeed.items![index].pubDate != null) {
+          formatedDate = DateFormat.yMd().format(rssFeed.items![index].pubDate as DateTime);
+          pubDate = formatedDate.toString();
+        } else {
+          pubDate = '??/??/??';
+        }
         var link =
             Utils.sanatizeValue(rssFeed.items![index].description.toString());
         articles.add(new Article(title, description, link, pubDate, imgUrl));

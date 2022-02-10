@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Colors.white,
         ),
         body: FutureBuilder(
-          future: feed.fetchFeed(),
+          future: feed.fetchFeeds(),
           builder:
               (BuildContext context, AsyncSnapshot<List<Article>> snapshot) {
             if (snapshot.hasData) {
