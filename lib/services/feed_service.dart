@@ -45,8 +45,9 @@ class FeedService {
           pubDate = '??/??/??';
         }
         var link =
-            Utils.sanatizeValue(rssFeed.items[index].description.toString());
+            Utils.sanatizeValue(rssFeed.items[index].link.toString());
         articles.add(new Article(title, description, link, pubDate));
+      inspect(link);
       }
       return articles;
     } else {
