@@ -16,9 +16,7 @@ class NewsTile extends StatelessWidget {
       decoration:
           BoxDecoration(border: Border.all(width: .5, color: Colors.grey)),
       child: ListTile(
-        leading: article.imgUrl != ''
-            ? Image.network(article.imgUrl)
-            : Image.asset(
+        leading: Image.asset(
                 'assets/images/placeholder.jpg',
                 fit: BoxFit.cover,
               ),

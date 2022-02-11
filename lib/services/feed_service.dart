@@ -28,27 +28,25 @@ class FeedService {
     if (res.statusCode == 200) {
       var rssFeed = RssFeed.parse(res.body);
       List<Article> articles = [];
-      for (int index = 0; index < rssFeed.items!.length; index++) {
-        inspect(rssFeed.items![index]);
-        var title = Utils.sanatizeValue(rssFeed.items![index].title.toString());
+      for (int index = 0; index < rssFeed.items.length; index++) {
+        inspect(rssFeed.items[index]);
+        var title = Utils.sanatizeValue(rssFeed.items[index].title.toString());
         if (title == '') {
           continue;
         }
         var description =
-            Utils.sanatizeValue(rssFeed.items![index].description.toString());
-        var imgUrl = Utils.sanatizeValue(
-            rssFeed.items![index].enclosure?.url.toString());
+            Utils.sanatizeValue(rssFeed.items[index].description.toString());
         String formatedDate;
         String pubDate;
-        if (rssFeed.items![index].pubDate != null) {
-          formatedDate = DateFormat.yMd().format(rssFeed.items![index].pubDate as DateTime);
+        if (rssFeed.items[index].pubDate != null) {
+          formatedDate = DateFormat.yMd().format(rssFeed.items[index].pubDate as DateTime);
           pubDate = formatedDate.toString();
         } else {
           pubDate = '??/??/??';
         }
         var link =
-            Utils.sanatizeValue(rssFeed.items![index].description.toString());
-        articles.add(new Article(title, description, link, pubDate, imgUrl));
+            Utils.sanatizeValue(rssFeed.items[index].description.toString());
+        articles.add(new Article(title, description, link, pubDate));
       }
       return articles;
     } else {

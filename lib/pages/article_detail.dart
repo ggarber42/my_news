@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:my_news/models/article_model.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+
 class ArticleDetail extends StatelessWidget {
   final Article article;
 
   ArticleDetail(this.article);
+
+  _goToArticle(){
+    print(article.link);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +26,20 @@ class ArticleDetail extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              article.description,
-              style: const TextStyle(
-                fontSize: 17,
-              ),
-            )
+            Html(
+              data: article.description,
+            ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.navigation),
+        onPressed: () => _goToArticle(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
     );
   }
 }
